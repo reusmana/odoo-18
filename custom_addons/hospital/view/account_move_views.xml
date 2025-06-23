@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<odoo>
+<!--    this is for add record oappoinment on account invoice-->
+    <record id="view_move_for_inheritance" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_reference']" position="after">
+<!--                this is place after pament ref-->
+                <field name="appointment_id"/>
+            </xpath>
+<!--            hidden Auto-post? or delete-->
+            <xpath expr="//group[@name='accounting_info_group']/field[@name='auto_post']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+     <record id="list_move_for_inheritance" model="ir.ui.view">
+<!--         account.invoice.list   -> this is from account name view list-->
+        <field name="name">account.move.list</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_date']" position="after">
+<!--                this is place after pament ref-->
+                <field name="appointment_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

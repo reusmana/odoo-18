@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+<!--    this is paerent menu-->
+    <menuitem id="menu_hospital_root"
+              name="HMS"
+              web_icon="hospital,static/description/icon.png"
+              sequence="35"
+              />
+<!--this is for positon menu-->
+
+
+<!--    this is child menu-->
+    <menuitem id="menu_front_desk"
+              name="Front Desk"
+              parent="menu_hospital_root"
+              />
+
+
+     <menuitem id="menu_patient"
+              name="Patients"
+              parent="menu_front_desk"
+               action="action_hospital_patients"
+              />
+    <menuitem id="menu_patient_read"
+              name="View Patients"
+              parent="menu_front_desk"
+               action="action_hospital_patients_read"
+              />
+     <menuitem id="menu_appointment"
+              name="Appointment"
+              parent="menu_front_desk"
+               action="action_hospital_appointment"
+              />
+    <menuitem id="menu_appointment_line"
+              name="Appointment Line"
+              parent="menu_front_desk"
+               action="action_hospital_appointment_line"
+              />
+
+    <menuitem id="menu_configuration"
+              name="Configuration"
+              groups="hospital.group_hospital_doctors"
+              parent="menu_hospital_root"
+              />
+
+    <menuitem id="menu_patient_tag"
+              name="Tag"
+              parent="menu_configuration"
+               action="action_patient_tags"
+              />
+
+    <menuitem id="menu_billing"
+              name="Billing"
+              parent="menu_hospital_root"
+              >
+        <menuitem id="menu_invoice"
+              name="Invoice"
+               action="account.action_move_out_invoice"
+              />
+        <menuitem id="menu_payment"
+              name="Payment"
+               action="account.action_account_payments"
+              />
+    </menuitem>
+</odoo>

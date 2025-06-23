@@ -1,0 +1,15 @@
+you should have pgsql
+
+then running the query
+create user <user> with password '@Reussujani1611';
+
+alter user <user> with superuser;
+
+then pip3 install -r requiredment.txt
+
+you should have .venv on root folder
+
+then you should (optional) edit configurate on your run project
+
+-- script = /Users/reusmana/PycharmProjects/PythonProject/odoo/odoo-bin
+-- script parameter = -c /Users/reusmana/PycharmProjects/PythonProject/conf/odoo.conf

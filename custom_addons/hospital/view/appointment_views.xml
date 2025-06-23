@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_hospital_appointment_list" model="ir.ui.view">
+        <field name="name">hospital.appointment.tree</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="patient_id" />
+                <field name="create_uid" groups="hospital.group_hospital_doctors" />
+                <field name="date_appointment" optional="hide" />
+                <field name="note" optional="hide" />
+            </list>
+        </field>
+    </record>
+    <record id="view_hospital_appointment_form" model="ir.ui.view">
+        <field name="name">hospital.appointment.form</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <form string="Appointment">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm" invisible="state != 'draft'" class="oe_highlight" />
+                    <button name="action_ongoing" type="object" string="Ongoing" invisible="state != 'confirmed'"  class="oe_highlight"  />
+                    <button name="action_done" type="object" string="Done" invisible="state != 'ongoing'"  class="oe_highlight" />
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state  == 'done' or state == 'cancel'" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,ongoing,done" />
+<!--                    <field name="state" widget="statusbar" options="{'clickable' : '1'}" />-->
+                </header>
+<!--                sheet for border and margin or padding-->
+                <sheet>
+                    <group>`
+                        <group>
+                            <field name="reference" readonly="True" />
+                            <field name="patient_id" />
+                            <field name="date_of_birth" />
+                            <field name="date_appointment" />
+                        </group>
+                        <group>
+                            <field name="note" />
+                            <field name="total_qty" />
+                        </group>
+                    </group>
+                    <group>
+                        <notebook>
+                            <page name="appointment_line" string="line">
+                                <field name="appointment_line_ids" >
+                                    <list editable="bottom">
+                                        <field name="product_id" />
+                                        <field name="qty" />
+                                    </list>
+<!--                                    popup d-form-->
+<!--                                    <form>-->
+<!--                                        <sheet>-->
+<!--                                            <group>-->
+<!--                                                <field name="product_id"/>-->
+<!--                                                <field name="qty"/>-->
+<!--                                            </group>-->
+<!--                                        </sheet>-->
+<!--                                    </form>-->
+                                </field>
+                            </page>
+                            <page name="notes" string="note">
+                                <field name="note" />
+                            </page>
+                        </notebook>
+                    </group>
+                    <group>
+                        <chatter/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hospital_appointment" model="ir.actions.act_window">
+        <field name="name">Appointment</field>
+        <field name="res_model">hospital.appointment</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+                      (0, 0, {'view_mode': 'list', 'view_id': ref('view_hospital_appointment_list')}),
+                      (0, 0, {'view_mode': 'form', 'view_id': ref('view_hospital_appointment_form')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create New Appointment
+            </p>
+        </field>
+    </record>
+</odoo>
