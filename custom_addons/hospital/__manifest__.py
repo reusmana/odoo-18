@@ -2,6 +2,7 @@
     "name":"hospital management system",
     "author":"Reusmana Sujani",
     "license":"LGPL-3",
+    "sequence": -1,
     "depends" : ['mail','product', 'account'],
     "data" : [
         'security/security.xml',
@@ -15,5 +16,7 @@
         'view/account_move_views.xml',
         'view/menu.xml',
     ],
+
+    "application": True
 
 }

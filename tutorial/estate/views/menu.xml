@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+<!--    this is paerent menu-->
+    <menuitem id="menu_estate_root"
+              name="ESM"
+              sequence="37"
+              />
+    <menuitem id="menu_front_desk"
+              name="Estate Detail"
+              parent="menu_estate_root"
+              />
+     <menuitem id="menu_estate"
+               name="Estate"
+               parent="menu_front_desk"
+               action="action_estate_home"
+              />
+</odoo>

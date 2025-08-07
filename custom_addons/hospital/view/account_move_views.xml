@@ -6,11 +6,11 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='payment_reference']" position="after">
+            <xpath expr="//group[@name='sale_info_group']/field[@name='payment_reference']" position="after">
 <!--                this is place after pament ref-->
                 <field name="appointment_id"/>
             </xpath>
-<!--            hidden Auto-post? or delete-->
+<!--            hidden Auto-post? or delete // mengubh or change attrubyt auto_post to be invisible true--> 
             <xpath expr="//group[@name='accounting_info_group']/field[@name='auto_post']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
@@ -23,7 +23,7 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_invoice_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='invoice_date']" position="after">
+            <xpath expr="//field[@name='invoice_date_due']" position="before">
 <!--                this is place after pament ref-->
                 <field name="appointment_id"/>
             </xpath>

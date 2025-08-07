@@ -81,7 +81,9 @@
                       (0, 0, {'view_mode': 'list', 'view_id': ref('view_hospital_patients_list')}),
                       (0, 0, {'view_mode': 'form', 'view_id': ref('view_hospital_patients_form')})]"/>
 
+<!-- this is for ref hospital search -->
         <field name="search_view_id" ref="hospital_patient_search"/>
+        <!-- this is for automatic filter by fillter name like search_default_female_patient or  search_default_group -->
         <field name="context">{'search_default_male_patient':1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
