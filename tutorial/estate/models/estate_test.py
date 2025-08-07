@@ -17,3 +17,4 @@ class EstateTest(models.Model):
     garden = fields.Boolean( string="Garden")
     garden_area = fields.Integer( string="Garden Area")
     garden_orientation = fields.Selection([('north', 'North'), ('south', 'South'), ('east', 'East'), ('west', 'West')], string="Garden Orientation")
+    active = fields.Boolean( string="Active", default=True)

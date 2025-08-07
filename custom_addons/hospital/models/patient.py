@@ -17,6 +17,7 @@ class HospitalPatients(models.Model):
     is_minor = fields.Boolean(string="Is Minor")
     guardian = fields.Char(string="Guardian")
     weight = fields.Float(string="Weight")
+    active = fields.Boolean(string="Active", default=True)
 
     # this is method override
     # def unlink(self):

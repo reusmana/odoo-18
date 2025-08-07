@@ -29,6 +29,7 @@
                             <field name="gender" />
                             <field name="weight" />
                             <field name="tag_ids" widget="many2many_tags" />
+                            <field name="active" invisible="1"/>
                         </group>
                     </group>
                     <group>
@@ -49,16 +50,22 @@
                 <field name="date_of_birth" />
                 <field name="gender" />
 
-<!--                filter domain join-->
+<!--                filter domain join 
+                    if you put | is mean or if not any put | is mean & and
+-->
                 <field name="name" string="Join name or male"
+                
                     filter_domain="['|',('name', 'ilike', self), ('gender', 'ilike', self)]"/>
 
 <!--                 <field name="name" string="Order"-->
 <!--                    filter_domain="['|', '|', ('name', 'ilike', self), ('client_order_ref', 'ilike', self), ('partner_id', 'child_of', self)]"/>-->
 
                 <filter name="male_patient" string="male" domain="[('gender', '=', 'male')]" />
+                <!-- domain is filter of list base on condition -->
                 <separator />
                 <filter name="female_patient" string="female" domain="[('gender', '=', 'female')]" />
+                <separator />
+                <filter name="archive" string="archive" domain="[('active', '=', False)]" />
 
                 <group string="group gender" expand="1" >
                     <filter name="groupby_gender" string="Gender" context="{'group_by' : 'gender'}" />
@@ -85,6 +92,9 @@
         <field name="search_view_id" ref="hospital_patient_search"/>
         <!-- this is for automatic filter by fillter name like search_default_female_patient or  search_default_group -->
         <field name="context">{'search_default_male_patient':1}</field>
+
+        <!-- this is for default list filter by condition -->
+        <!-- <field name="domain">[('gender', '=', 'female')]</field>  -->
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create New Patients

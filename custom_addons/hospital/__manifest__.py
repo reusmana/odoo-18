@@ -17,6 +17,9 @@
         'view/menu.xml',
     ],
 
-    "application": True
+    "application": True,
+    'installable': True,
+    "demo": [
+    ],
 
 }
