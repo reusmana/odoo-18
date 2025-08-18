@@ -18,17 +18,26 @@
             <form string="Patients">
 <!--                sheet for border and margin or padding-->
                 <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="image" widget="image" class="oe_avatar"/>
                     <group>
                         <group>
                             <field name="name" />
                             <field name="date_of_birth" />
-                            <field name="is_minor" />
+                            <field name="age" />
+                            <field name="is_minor" widget="boolean_toggle" />
                             <field name="guardian" invisible="not is_minor" required="is_minor" />
                         </group>
                         <group>
                             <field name="gender" />
                             <field name="weight" />
-                            <field name="tag_ids" widget="many2many_tags" />
+                            <!-- color picker -->
+                            <field name="color_2" widget="color" />
+                            <field name="color" widget="color_picker" />
+                            <!-- color this from color field on model tag -->
+                            <!-- 'no_create_edit': True is mean no edit color on this view for tag -->
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                             <field name="active" invisible="1"/>
                         </group>
                     </group>

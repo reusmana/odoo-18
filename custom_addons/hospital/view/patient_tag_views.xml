@@ -5,11 +5,13 @@
         <field name="model">patient.tag</field>
         <field name="arch" type="xml">
         <!-- editable like just not need form for add or edit the list -->
-            <list string="Patient Tag" editable="bottom">
+            <list string="Patient Tag" editable="bottom" sample="1">
+            <!-- sample is true mean add sample when list is empty -->
                 <!-- sequece is order number for handle widget=handle is kanban, can drag -->
                 <field name="sequence" widget="handle" /> 
 
                 <field name="name" />
+                <field name="color" widget="color_picker" />
                 <field name="sequence" />
             </list>
         </field>

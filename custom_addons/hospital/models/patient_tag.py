@@ -9,3 +9,4 @@ class PatientTags(models.Model):
     name = fields.Char(string="Name", required=True)
 
     sequence = fields.Integer(string="Sequence", default=10)
+    color = fields.Integer(string="Color")

@@ -48,6 +48,11 @@
               parent="menu_configuration"
                action="action_patient_tags"
               />
+    <menuitem id="menu_cancel_appointment"
+              name="Cancel Appointment"
+              parent="menu_front_desk"
+            action="action_cancel_appointment"
+              />
 
     <menuitem id="menu_billing"
               name="Billing"

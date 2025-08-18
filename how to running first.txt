@@ -13,3 +13,10 @@ then you should (optional) edit configurate on your run project
 
 -- script = /Users/reusmana/PycharmProjects/PythonProject/odoo/odoo-bin
 -- script parameter = -c /Users/reusmana/PycharmProjects/PythonProject/conf/odoo.conf
+
+
+
+// command create new module using cli
+-- ./odoo-bin scaffold hospital_inheritance /Users/reusmana/PycharmProjects/PythonProject/custom_addons
+
+

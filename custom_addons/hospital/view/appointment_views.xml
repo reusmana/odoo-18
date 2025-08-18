@@ -1,14 +1,45 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+    <record id="view_hospital_appointment_activity" model="ir.ui.view">
+        <field name="name">hospital.appointment.activity</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <activity string="Appointment Activity">
+                <field name="patient_id"/>
+                <field name="reference"/>
+                <templates>
+                    <div t-name="activity-box">
+                        <img class="rounded-circle" t-att-src="activity_image('hospital.patient', 'image', record.patient_id.raw_value)" role="img" t-att-title="record.patient_id.value" t-att-alt="record.patient_id.value"/>
+                        <div class="ms-2">
+                            <field name="patient_id" display="full" class="o_text_block"/>
+                            <field name="reference" muted="1" class="o_text_block"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
     <record id="view_hospital_appointment_list" model="ir.ui.view">
         <field name="name">hospital.appointment.tree</field>
         <field name="model">hospital.appointment</field>
         <field name="arch" type="xml">
-            <list>
-                <field name="patient_id" />
+            <list decoration-success="state == 'done'" multi_edit="1">
+            <!-- multi edit is mean, can edit or change the record inside list -->
+                <field name="patient_id" widget="many2one_avatar" />
                 <field name="create_uid" groups="hospital.group_hospital_doctors" />
                 <field name="date_appointment" optional="hide" />
+                <field name="doctor_ids" widget="many2one_avatar_user" optional="show"/>
+                <!-- many2one_avatar_user is diferrent many2one_avatar, because this widget has name user have popup spesifik view when the name or photo is cliked -->
+                <field name="activity_ids" widget="list_activity" optional="show"/>
                 <field name="note" optional="hide" />
+                <field name="state" optional="show" widget="badge"
+                    decoration-info="state == 'draft'"
+                    decoration-danger="state == 'cancel'"
+                    decoration-warning="state == 'ongoing'"
+                    decoration-success="state == 'done'"
+                 />
+
             </list>
         </field>
     </record>
@@ -21,23 +52,38 @@
                     <button name="action_confirm" type="object" string="Confirm" invisible="state != 'draft'" class="oe_highlight" />
                     <button name="action_ongoing" type="object" string="Ongoing" invisible="state != 'confirmed'"  class="oe_highlight"  />
                     <button name="action_done" type="object" string="Done" invisible="state != 'ongoing'"  class="oe_highlight" />
-                    <button name="action_cancel" type="object" string="Cancel" invisible="state  == 'done' or state == 'cancel'" />
+                    <!-- you can call the wizard opsi 1 or 2 -->
+                    <!-- opsi 1 -->
+                    <button name="%(hospital.action_cancel_appointment)d" type="action" string="Cancel" invisible="state  == 'done' or state == 'cancel'" />
+                    <!-- opsi 2 -->
+                    <!-- <button name="action_cancel" type="object" string="Cancel" invisible="state  == 'done' or state == 'cancel'" /> -->
+                    
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,ongoing,done" />
 <!--                    <field name="state" widget="statusbar" options="{'clickable' : '1'}" />-->
                 </header>
 <!--                sheet for border and margin or padding-->
                 <sheet>
+                    <div>
+                        <h1>
+                            <field name="priority" widget="priority"/>
+                        </h1>
+                    </div>
                     <group>`
                         <group>
                             <field name="reference" readonly="True" />
-                            <field name="patient_id" />
+                            <field name="patient_id" default_focus="1" />
                             <field name="date_of_birth" />
                             <field name="date_appointment" />
+                            <field name="doctor_ids" />
                         </group>
                         <group>
                             <field name="note" />
                             <field name="total_qty" />
+                            <!-- group is when developer mode is active then total_qty is appear -->
+                            <field name="hide_and_seek" groups="base.group_no_one" />
                             <attribute name="create">true</attribute>
+                            <button name="testing_clicking" type="object" string="testing" help="testing" data-hotkey="v" />
+                            <button name="%(hospital.action_hospital_patients)d" type="action" string="redirect to patient" help="this is for redirect to patient records" confirm="Are you sure want to leave this page?" class="btn-link" icon="oi-arrow-right" />
                         </group>
                     </group>
                     <group>
@@ -46,8 +92,13 @@
                                 <field name="appointment_line_ids" >
                                     <list editable="bottom">
                                         <field name="product_id" />
-                                        <field name="qty" />
-                                        
+                                        <!-- <field name="product_sale_unit" column_invisible="hide_and_seek"/> -->
+                                        <field name="product_sale_unit" >
+                                            <attribute name="column_invisible">
+                                            [('hide_and_seek', '=', true)]
+                                            </attribute>
+                                        </field>
+                                        <field name="qty" /> 
                                     </list>
 <!--                                    popup d-form-->
 <!--                                    <form>-->
@@ -63,6 +114,13 @@
                             <page name="notes" string="note">
                                 <field name="note" />
                             </page>
+                            <page name="description" string="description">
+                            <!--  options="{'collaborative': true}" is realtime typing, side user othner can see the changes -->
+                                <field name="description"
+                                    placeholder="Create some description in here"
+                                    options='{"collaborative": true, "resizable": true, "codeview": true}'
+                                    widget="html"/>
+                            </page>
                         </notebook>
                     </group>
                     <group>
@@ -76,10 +134,11 @@
     <record id="action_hospital_appointment" model="ir.actions.act_window">
         <field name="name">Appointment</field>
         <field name="res_model">hospital.appointment</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,form,activity</field>
         <field name="view_ids" eval="[(5, 0, 0),
                       (0, 0, {'view_mode': 'list', 'view_id': ref('view_hospital_appointment_list')}),
-                      (0, 0, {'view_mode': 'form', 'view_id': ref('view_hospital_appointment_form')})]"/>
+                      (0, 0, {'view_mode': 'form', 'view_id': ref('view_hospital_appointment_form')}),
+                      (0, 0, {'view_mode': 'activity', 'view_id': ref('view_hospital_appointment_activity')})]"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create New Appointment
