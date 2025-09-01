@@ -12,9 +12,9 @@
       "console": "integratedTerminal",
       "args": [
         "-c",
-        "/Users/reusmana/PycharmProjects/PythonProject/conf/odoo.conf",
-        "-p",
-        "8051"
+        "/Users/reusmana/PycharmProjects/PythonProject/conf/odoo.conf"
+        // "-p",
+        // "8051"
         // "--dev",
         // "xml"
       ]

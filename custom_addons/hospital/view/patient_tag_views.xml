@@ -5,7 +5,8 @@
         <field name="model">patient.tag</field>
         <field name="arch" type="xml">
         <!-- editable like just not need form for add or edit the list -->
-            <list string="Patient Tag" editable="bottom" sample="1">
+        <!-- editable="bottom" -->
+            <list string="Patient Tag"  sample="1" export_xlsx="0">
             <!-- sample is true mean add sample when list is empty -->
                 <!-- sequece is order number for handle widget=handle is kanban, can drag -->
                 <field name="sequence" widget="handle" /> 
@@ -20,7 +21,7 @@
     <record id="action_patient_tags" model="ir.actions.act_window">
         <field name="name">Patients Tags</field>
         <field name="res_model">patient.tag</field>
-        <field name="view_mode">list</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create New Tags

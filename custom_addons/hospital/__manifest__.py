@@ -17,8 +17,10 @@
         'view/appointment_views.xml',
         'view/appointment_line_views.xml',
         'view/patient_tag_views.xml',
+        'view/operation_views.xml',
         'view/account_move_views.xml',
         'view/menu.xml',
+        'view/res_config_settings_views.xml',
     ],
 
     "application": True,

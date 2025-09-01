@@ -24,12 +24,16 @@
         <field name="name">hospital.appointment.tree</field>
         <field name="model">hospital.appointment</field>
         <field name="arch" type="xml">
-            <list decoration-success="state == 'done'" multi_edit="1">
+            <list decoration-success="state == 'done'" multi_edit="1" decoration-danger="state == 'cancel'">
             <!-- multi edit is mean, can edit or change the record inside list -->
-                <field name="patient_id" widget="many2one_avatar" />
+            <header>
+            <button name="action_confirm" type="object" string="Confirm" class="oe_highlight" />
+            </header>
+            <!-- decoration-bf="1" is mean bold, and it ist mean italic font -->
+                <field name="patient_id" widget="many2one_avatar" decoration-it="1" />
                 <field name="create_uid" groups="hospital.group_hospital_doctors" />
                 <field name="date_appointment" optional="hide" />
-                <field name="doctor_ids" widget="many2one_avatar_user" optional="show"/>
+                <field name="doctor_ids" widget="many2one_avatar_user" optional="show" decoration-bf="1"/>
                 <!-- many2one_avatar_user is diferrent many2one_avatar, because this widget has name user have popup spesifik view when the name or photo is cliked -->
                 <field name="activity_ids" widget="list_activity" optional="show"/>
                 <field name="note" optional="hide" />
@@ -39,8 +43,48 @@
                     decoration-warning="state == 'ongoing'"
                     decoration-success="state == 'done'"
                  />
-
+                <field name="id" widget="button" string="Action">
+                    <button name="action_confirm" type="object" class="btn-primary fa fa-check"/>
+                </field>
+                <field name="currency_id" /> 
+                <field name="total" widget="monetary" decoration-bf="total > 0"/>
+                <field name="progress" widget="progressbar"/>
             </list>
+        </field>
+    </record>
+
+    <record id="view_hospital_appointment_calendar" model="ir.ui.view">
+        <field name="name">hospital.appointment.calendar</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+        <!-- hide_time, quick_add, avatar_field='image', event_limit=10, form_view_id  -->
+            <calendar string="Appointment" mode="month" date_start="date_appointment" color="state" date_delay="duration" event_open_popup="True">
+                <field name="patient_id" invisible="1"/>
+                 <field name="state" optional="show" widget="badge"
+                    decoration-info="state == 'draft'"
+                    decoration-danger="state == 'cancel'"
+                    decoration-warning="state == 'ongoing'"
+                    decoration-success="state == 'done'"
+                    filters="1"
+                 />
+            </calendar>
+        </field>
+    </record>
+
+
+    <!-- server action is appear, when checkbox on list -->
+    <record model="ir.actions.server" id="action_done_patient_appointment">
+        <field name="name">Mark is Done</field>
+        <field name="model_id" ref="model_hospital_appointment"/>
+        <!-- <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/> -->
+        <field name="binding_model_id" ref="model_hospital_appointment" />
+        <!-- appear for list also -->
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            for record in records:
+                if record.state == 'ongoing':
+                    record.action_done()
         </field>
     </record>
     <record id="view_hospital_appointment_form" model="ir.ui.view">
@@ -54,10 +98,14 @@
                     <button name="action_done" type="object" string="Done" invisible="state != 'ongoing'"  class="oe_highlight" />
                     <!-- you can call the wizard opsi 1 or 2 -->
                     <!-- opsi 1 -->
-                    <button name="%(hospital.action_cancel_appointment)d" type="action" string="Cancel" invisible="state  == 'done' or state == 'cancel'" />
+                    <!-- add context fo default value and passing context for hidding appointment id when open cancel in page this -->
+                    <button name="%(hospital.action_cancel_appointment)d" type="action" string="Cancel" invisible="state  == 'done' or state == 'cancel'" context="{'default_reason':'i want it', 'hide_appointment_id':1}" />
                     <!-- opsi 2 -->
                     <!-- <button name="action_cancel" type="object" string="Cancel" invisible="state  == 'done' or state == 'cancel'" /> -->
                     
+                    <!-- share whatapps -->
+                    <button name="check_notify" type="object" string="Notify Check" class="oe_highlight" />
+                    <button name="action_share_wa" type="object" string="Whatapps" class="oe_highlight" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,ongoing,done" />
 <!--                    <field name="state" widget="statusbar" options="{'clickable' : '1'}" />-->
                 </header>
@@ -70,11 +118,14 @@
                     </div>
                     <group>`
                         <group>
-                            <field name="reference" readonly="True" />
+                        <!-- when ever if you create readonly, for save to db you need force_save, because without this the values make a gone -->
+                            <field name="reference" readonly="True" force_save="1" />
                             <field name="patient_id" default_focus="1" />
                             <field name="date_of_birth" />
                             <field name="date_appointment" />
-                            <field name="doctor_ids" />
+                            <field name="doctor_ids" widget="many2one_avatar_user" />
+                            <field name="operation_id" />
+                            <field name="duration" />
                         </group>
                         <group>
                             <field name="note" />
@@ -83,6 +134,7 @@
                             <field name="hide_and_seek" groups="base.group_no_one" />
                             <attribute name="create">true</attribute>
                             <button name="testing_clicking" type="object" string="testing" help="testing" data-hotkey="v" />
+                            
                             <button name="%(hospital.action_hospital_patients)d" type="action" string="redirect to patient" help="this is for redirect to patient records" confirm="Are you sure want to leave this page?" class="btn-link" icon="oi-arrow-right" />
                         </group>
                     </group>
@@ -92,13 +144,15 @@
                                 <field name="appointment_line_ids" >
                                     <list editable="bottom">
                                         <field name="product_id" />
-                                        <!-- <field name="product_sale_unit" column_invisible="hide_and_seek"/> -->
-                                        <field name="product_sale_unit" >
-                                            <attribute name="column_invisible">
+                                        <field name="product_sale_unit" column_invisible="True"/>
+                                        <!-- <field name="product_sale_unit" /> -->
+                                            <!-- <attribute name="column_invisible">
                                             [('hide_and_seek', '=', true)]
-                                            </attribute>
-                                        </field>
+                                            </attribute> -->
+                                        <!-- </field> -->
                                         <field name="qty" /> 
+                                        <field name="currency_id" invisible="1" /> 
+                                        <field name="price_subtotal" widget="monetary"/> 
                                     </list>
 <!--                                    popup d-form-->
 <!--                                    <form>-->
@@ -113,6 +167,11 @@
                             </page>
                             <page name="notes" string="note">
                                 <field name="note" />
+                            </page>
+                            <page name="progress" string="progress">
+                                <field name="progress" widget="progressbar"/>
+                                <field name="progress_gauge" widget="gauge"/>
+                                <field name="progress_gauge" widget="percentpie"/>
                             </page>
                             <page name="description" string="description">
                             <!--  options="{'collaborative': true}" is realtime typing, side user othner can see the changes -->
@@ -134,7 +193,7 @@
     <record id="action_hospital_appointment" model="ir.actions.act_window">
         <field name="name">Appointment</field>
         <field name="res_model">hospital.appointment</field>
-        <field name="view_mode">list,form,activity</field>
+        <field name="view_mode">list,form,activity,calendar</field>
         <field name="view_ids" eval="[(5, 0, 0),
                       (0, 0, {'view_mode': 'list', 'view_id': ref('view_hospital_appointment_list')}),
                       (0, 0, {'view_mode': 'form', 'view_id': ref('view_hospital_appointment_form')}),

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_hospital_list" model="ir.ui.view">
+        <field name="name">hospital.operation.tree</field>
+        <field name="model">hospital.operation</field>
+        <field name="arch" type="xml">
+        <!-- editable like just not need form for add or edit the list -->
+            <list string="Hospital Operation" sample="1" export_xlsx="0">
+                <field name="doctor_id" />
+                <field name="operation_name" />
+                <field name="records" />
+            </list>
+        </field>
+    </record>
+    <record id="view_hospital_form" model="ir.ui.view">
+        <field name="name">hospital.operation.form</field>
+        <field name="model">hospital.operation</field>
+        <field name="arch" type="xml">
+        <!-- editable like just not need form for add or edit the list -->
+            <form string="Hospital Operation">
+                <sheet>
+                    <group string="form">
+                            <field name="doctor_id"/>
+                            <field name="operation_name"/>
+                            <field name="records"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hospital_act" model="ir.actions.act_window">
+        <field name="name">Hospital Operation</field>
+        <field name="res_model">hospital.operation</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create New Operation
+            </p>
+        </field>
+    </record>
+</odoo>

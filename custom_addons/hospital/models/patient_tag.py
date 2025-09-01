@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 
 class PatientTags(models.Model):
     _name = 'patient.tag'
@@ -8,5 +8,20 @@ class PatientTags(models.Model):
 
     name = fields.Char(string="Name", required=True)
 
-    sequence = fields.Integer(string="Sequence", default=10)
-    color = fields.Integer(string="Color")
+    sequence = fields.Integer(string="Sequence", default=10) # need sequence for reorder list
+    color = fields.Integer(string="Color", copy=1) # whne is duplicate the tag, copy id default 1
+
+    # _sql_constraints = [('name_uniq', "unique(name, applicability, country_id)", "A tag with the same name and applicability already exists in this country.")]
+    _sql_constraints = [('name_uniq', "unique(name)", "A tag name with the same name already exists in this tags."), (
+        'check_sequence', 'CHECK(sequence > 0)', 'The sequence number must be strictly positive.'
+    )]
+
+
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        """ Override Name tag when duplicate the record. """
+        if default is None:
+            default = {}
+        if not default.get('name'):
+            default['name'] = _("%s (copy)", self.name)
+        return  super(PatientTags, self).copy(default)

@@ -6,10 +6,18 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
+        <!-- artainya // itu cri semua, child nya, kalau cuma / itu berarti cari child yang di bawah parent, tidak semua -->
+        <!-- // itmena group -> div -> field or group -> div -> div -> field
+        / group -> field -->
+          <xpath expr="//group[@id='header_left_group']" position="inside">
+                <field name="so_confirm_user_id" widget="many2one_avatar_user"/>
+            </xpath>
+
             <xpath expr="//group[@name='sale_info_group']/field[@name='payment_reference']" position="after">
 <!--                this is place after pament ref-->
                 <field name="appointment_id"/>
             </xpath>
+          
 <!--            hidden Auto-post? or delete // mengubh or change attrubyt auto_post to be invisible true--> 
             <xpath expr="//group[@name='accounting_info_group']/field[@name='auto_post']" position="attributes">
                 <attribute name="invisible">1</attribute>

@@ -1,6 +1,8 @@
 from email.policy import default
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+
+from odoo.exceptions import UserError, ValidationError
 
 class HospitalAppointment(models.Model):
     _name = 'hospital.appointment'
@@ -37,6 +39,48 @@ class HospitalAppointment(models.Model):
     priority = fields.Selection([('0', 'Low'), ('1', 'Medium'), ('2', 'High')], string="Priority", default='0')
 
     hide_and_seek = fields.Boolean(string="Hide and Seek")
+
+    operation_id = fields.Many2one('hospital.operation', string="Operation")
+
+    progress = fields.Integer(string="Progress", compute='_compute_progress')
+
+    progress_gauge = fields.Float(string="Progress Gauge", compute='_compute_progress')
+
+    duration = fields.Float(string="Duration")
+
+    # this is for current company
+    company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.company)
+
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
+
+    price_subtotal = fields.Monetary(string="Subtotal", related='appointment_line_ids.price_subtotal')
+
+    total = fields.Monetary(string="Total", compute='_compute_total', precompute=True)
+
+    @api.depends('appointment_line_ids.price_subtotal')
+    def _compute_total(self):
+        for rec in self:
+            rec.total = sum(line.price_subtotal for line in rec.appointment_line_ids)
+
+   
+
+    def _compute_progress(self):
+        for rec in self:
+            if rec.state == 'draft':
+                rec.progress = 25
+                rec.progress_gauge = 25
+            elif rec.state == 'confirmed':
+                rec.progress = 50
+                rec.progress_gauge = 50
+            elif rec.state == 'ongoing':
+                rec.progress = 75
+                rec.progress_gauge = 75
+            elif rec.state == 'done':
+                rec.progress = 100
+                rec.progress_gauge = 100
+            elif rec.state == 'cancel':
+                rec.progress = 0
+                rec.progress_gauge = 0
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -83,6 +127,14 @@ class HospitalAppointment(models.Model):
         # self.write({'state': 'cancel'})
 
     def testing_clicking(self):
+
+        # if wannna redirect to url 
+        # return {
+        #     'type': 'ir.actions.act_url',
+        #     'url': 'https://google.com',
+        #     'target': 'new',
+        # }
+    
         return {
                 'effect': {
                     'fadeout': 'slow',
@@ -92,13 +144,54 @@ class HospitalAppointment(models.Model):
                 }
             }
         return True
+    
+    def action_share_wa(self):
+        print("whatsapp")
+
+        self.message_post(body=_("share to whatsapp"), subject='whatapps')
+
+        if self.patient_id.phone:
+            return {
+                'type': 'ir.actions.act_url',
+                'url': 'https://wa.me/62%s' % self.patient_id.phone,
+                'target': 'new',
+            }
+        
+        raise ValidationError(_("Phone number not found with number %s",  self.patient_id.phone))
+    
+
+    def check_notify(self):
+        print("check notify")
+        # success, warning, danger 
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'sticky': False,
+                'message': _("Accounts successfully merged!"),
+                'next': {'type': 'ir.actions.act_window_close'},
+            }
+        }
+        return
 
 
 class HospitalAppointmentLine(models.Model):
     _name = 'hospital.appointment.line'
     _description = 'Hospital Appointment Line'
 
-    appointment_id = fields.Many2one('hospital.appointment', string="Appointment")
+    # ondelete='cascade' its mean, when patient delete from patien, this record also delete,
+    # ondelete='set null' its mean, when patient delete from patien, this record also set null
+    # ondelete='restrict' its mean, when patient delete from patien, this record not delete, and the patient to have message error
+    appointment_id = fields.Many2one('hospital.appointment', string="Appointment", ondelete='cascade')
     product_id = fields.Many2one('product.product', string='Product', required=True)
-    product_sale_unit = fields.Float(related='product_id.list_price', readonly=True)
+    product_sale_unit = fields.Float(related='product_id.list_price', readonly=True, digits='Product Price') # digit on menu setting decimal according to currency
     qty = fields.Float(string="Quantity")
+
+    currency_id = fields.Many2one('res.currency', related='appointment_id.currency_id')
+    price_subtotal = fields.Monetary(string="Subtotal", store=True, compute='_compute_amounts')
+
+    @api.depends('product_id', 'qty')
+    def _compute_amounts(self):
+        for line in self:
+            line.price_subtotal = line.product_sale_unit * line.qty

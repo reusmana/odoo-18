@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo noupdate="1">
+<!-- jadi ketika pake noupdate, ketika di refresh modulenya atau di update modulenya, perubahan yang di lakukan pada dashboard odoo, gk akan ke restart atau balik ke semua -->
+<!-- misal sekarang prefix nya HA, di odoo di ubah jadi HAI, maka keetuka update module, akan tetap jadi HAI, tidak akan ke rubah ke semula -->
     <record id="seq_hospital_appointment" model="ir.sequence">
         <field name="name">Appointment seq</field>
         <field name="code">hospital.appointment</field>

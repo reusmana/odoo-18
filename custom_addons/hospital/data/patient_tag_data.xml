@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <!-- dummy data  -->
-    <record id="patient_tag_vip" model="patient.tag">
-        <field name="name">VIP</field>
-    </record>
-    <record id="patient_tag_kid" model="patient.tag">
-        <field name="name">KID</field>
-    </record>
-    <record id="patient_tag_adult" model="patient.tag">
-        <field name="name">Adult</field>
-        <field name="color" eval="1"/>
-    </record>
+    <data noupdate='1'>
 
+    <!-- kalau record dengan ID XML (id="") belum ada di database, Odoo akan buat record baru.
+
+    Kalau forcecreate="False" dan record itu tidak ada di database, Odoo tidak akan membuatnya → -->
+
+        <record id="patient_tag_vip" model="patient.tag" forcecreate="1">
+            <field name="name">VIP</field>
+        </record>
+        <record id="patient_tag_kid" model="patient.tag" forcecreate="True">
+            <field name="name">KID</field>
+        </record>
+        <record id="patient_tag_adult" model="patient.tag" forcecreate="False">
+            <field name="name">Adult</field>
+            <field name="color" eval="1"/>
+        </record>
+
+    </data>
 </odoo>

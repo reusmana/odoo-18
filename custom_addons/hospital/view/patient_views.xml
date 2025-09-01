@@ -6,7 +6,8 @@
         <field name="arch" type="xml">
             <list>
                 <field name="name" />
-                <field name="date_of_birth" optional="hide" />
+                <field name="age" avg="Average Age"/>
+                <field name="date_of_birth"/>
                 <field name="gender" optional="hide" />
             </list>
         </field>
@@ -18,27 +19,61 @@
             <form string="Patients">
 <!--                sheet for border and margin or padding-->
                 <sheet>
-                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_view_appointment_count" icon="fa-star">
+                            <field string="Appointment Count" name="appointment_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+
+                    <h1>
+                        <!-- only edit is appear the label -->
+                        <label for="name" string="Name" class="oe_edit_only" />
+                        <field name="name" />
+                    </h1>
+                    </div>
+                    <div class="alert alert-info"
+                         role="alert"
+                         invisible="not is_birth"
+                         >
+                        <div >
+                            <h1>This is my birtday  <field name="name" /></h1>
+                        </div>
+                    </div>
                     <group>
                         <group>
-                            <field name="name" />
                             <field name="date_of_birth" />
                             <field name="age" />
                             <field name="is_minor" widget="boolean_toggle" />
                             <field name="guardian" invisible="not is_minor" required="is_minor" />
                         </group>
                         <group>
-                            <field name="gender" />
+                            <field name="gender" widget="radio" />
                             <field name="weight" />
                             <!-- color picker -->
                             <field name="color_2" widget="color" />
                             <field name="color" widget="color_picker" />
                             <!-- color this from color field on model tag -->
                             <!-- 'no_create_edit': True is mean no edit color on this view for tag -->
+                            <!-- <field name="tag_ids" widget="many2many_checkboxes" options="{'color_field': 'color', 'no_create_edit': True}"/> -->
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                             <field name="active" invisible="1"/>
+                            <field name="appointment_count"/>
+                        </group>
+                        <group string="Other Infomation" name="other_info">
+                            <field name="parent" invisible="age > '18'" />
+                            <field name="marital_status" />
+                            <field name="partner_name" />
+                            
+                        </group>
+                        <group string="Other Infomation" name="other_info">
+                            <field name="phone" widget="phone" />
+                            <field name="email" widget="email" />
+                            <field name="website" widget="url" />
+                            
                         </group>
                     </group>
                     <group>
@@ -49,6 +84,10 @@
         </field>
     </record>
 
+
+
+
+
 <!--    custom search-->
     <record id="hospital_patient_search" model="ir.ui.view">
         <field name="name">hospital.patients.search</field>
@@ -58,6 +97,7 @@
                 <field name="name" />
                 <field name="date_of_birth" />
                 <field name="gender" />
+                <field name="age" />
 
 <!--                filter domain join 
                     if you put | is mean or if not any put | is mean & and
