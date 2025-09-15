@@ -9,6 +9,7 @@
         'security/security.xml',
         'security/ir.model.access.csv',
         'data/sequence.xml',
+        'data/cron.xml',
         'data/patient_tag_data.xml',
         'data/patient.tag.csv',
         'wizard/cancel_appointment_views.xml',

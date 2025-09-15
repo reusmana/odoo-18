@@ -133,3 +133,7 @@ class HospitalPatients(models.Model):
             'context': {'default_patient_id': self.id}, # this is for add record appointment, the name is default patient
             'domain': [('id', 'in', self.appointment_ids.ids)],
         }
+    
+    # @api.multi
+    def _test_cron_job(self):
+        print('test cron job')
