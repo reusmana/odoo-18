@@ -62,6 +62,39 @@ class HospitalAppointment(models.Model):
         for rec in self:
             rec.total = sum(line.price_subtotal for line in rec.appointment_line_ids)
 
+    def action_open_form(self):
+        print("open form bro")
+        print(self.id)
+        print(self.patient_id.id)
+        # {
+        #     "type": "ir.actions.act_window",
+        #     "res_model": "product.product",
+        #     "views": [[False, "form"]],
+        #     "res_id": a_product_id,
+        #     "target": "new",
+        # }
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'hospital.patients',
+            # open form view 
+            "views": [[False, "form"]], 
+            # 'view_mode': 'form',
+            # open form view hospital.patients with this id
+            'res_id': self.patient_id.id,
+            'target': 'new',  # Open in a new window
+        }
+    
+    def open_custom_widget(self):
+        print("open custom widget bro")
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'my_widget_action',
+            'params': {
+                'env': 'info',
+                'action': 'hohohoo',
+            },
+        }
+
    
 
     def _compute_progress(self):

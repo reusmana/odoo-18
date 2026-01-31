@@ -10,9 +10,14 @@
       "request": "launch",
       "program": "/Users/reusmana/PycharmProjects/PythonProject/odoo/odoo-bin",
       "console": "integratedTerminal",
+      "env": {
+        "GEVENT_SUPPORT": "true"
+      },
       "args": [
         "-c",
-        "/Users/reusmana/PycharmProjects/PythonProject/conf/odoo.conf"
+        "/Users/reusmana/PycharmProjects/PythonProject/conf/odoo.conf",
+        "-u",
+        "owl_dashboard"
         // "-p",
         // "8051"
         // "--dev",

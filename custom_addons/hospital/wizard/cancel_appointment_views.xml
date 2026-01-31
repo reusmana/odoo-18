@@ -35,6 +35,11 @@
         <field name="res_model">cancel.appointment.wizard</field>
         <field name="view_mode">form</field>
         <!-- for popup targer is new -->
+        <!-- Jadi pilihan target biasanya:
+        new → popup
+        current → ganti halaman aktif
+        inline → side panel (drawer)
+        fullscreen → tampilan penuh (Odoo modern) -->
         <field name="target">new</field> 
     </record>
 </odoo>

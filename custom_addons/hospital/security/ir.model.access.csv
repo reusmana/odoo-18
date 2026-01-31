@@ -6,3 +6,4 @@ access_patient_tag_doctor,access.patient.tag.doctor,model_patient_tag,hospital.g
 access_patient_tag_receptionist,access.patient.tag.receptionist,model_patient_tag,hospital.group_hospital_receptionist,1,1,1,0
 access_cancel_appointment_wizard,access.cancel.appointment.wizard,model_cancel_appointment_wizard,base.group_user,1,1,1,1
 access_hospital_operation,access.hospital.operation,model_hospital_operation,base.group_user,1,1,1,1
+access_patient_report_wizard,access.patient.report.wizard,model_patient_report_wizard,base.group_user,1,1,1,1

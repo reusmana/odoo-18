@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <data noupdate="0">
+    <data>
     <!-- module category 
     Ini membuat kategori baru bernama Hospital, yang akan muncul di tab pengaturan hak akses.
     -->
@@ -20,7 +20,7 @@
         <record id="group_hospital_doctors" model="res.groups">
             <field name="name">Doctors</field>
             <field name="category_id" ref="hospital.module_category_hospital"/>
-            <field name="implied_ids" eval="[(4, ref('hospital.group_hospital_receptionist'))]"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="comment">the user will have access to patient details.</field>
         </record>
 

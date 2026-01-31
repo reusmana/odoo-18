@@ -20,7 +20,7 @@ class HospitalPatients(models.Model):
     gender = fields.Selection([('male', 'Male'), ('female', 'Female')], string="Gender")
 
     # inverse can editabel age
-    age = fields.Integer(string="Age", compute='_compute_age', inverse="_inverse_age", search='_search_age', precompute=True)
+    age = fields.Integer(string="Age", compute='_compute_age', inverse="_inverse_age", search='_search_age', precompute=True, store=True)
 
     tag_ids = fields.Many2many('patient.tag', 'patient_tags_rel', 'patient_id', 'tag_id', string="Tags")
 
@@ -60,8 +60,24 @@ class HospitalPatients(models.Model):
             domain = [('patient_id', '=', record.id)]
             record.appointment_count = self.env['hospital.appointment'].search_count(domain)
 
+    @api.model # this is for cron, using api model because cron not have record id
+    def testing_cronX(self, vals):
+        print("Testing cron job")
+        print(self)
+        print(vals)
+
+    def testing_cronX_without_api(self):
+        print("Testing cron job")
+        print(self)
+
+    # NOT WORKING
+    @api.depends('date_of_birth')
+    def testing_depends(self):
+        print("print testing depends ---------------- depends")
+
     @api.depends('date_of_birth')
     def _compute_is_birth(self):
+        print("print is birth  ---------------- depends")
         today = date.today()
         for record in self:
             if record.date_of_birth:
@@ -73,6 +89,7 @@ class HospitalPatients(models.Model):
 
     @api.constrains('date_of_birth') #validation date
     def _check_date_of_birth(self):
+        print("print is birth  ---------------- constrains")
         for patient in self:
             if patient.date_of_birth > date.today():
                 raise ValidationError(_('You cannot set a date of birth in the future. (date of birth: %s)', patient.date_of_birth))

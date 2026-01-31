@@ -14,6 +14,14 @@ class CancelAppointmentWizard(models.TransientModel):
         res = super(CancelAppointmentWizard, self).default_get(fields)
         res['date_cancel'] = datetime.now()
         print("sss--------------------", self.env.context)
+        # self.env.context.get('active_id') itu memang bawaan Odoo.
+        # Dia otomatis diisi sama framework Odoo ketika kamu buka action (misalnya klik button, atau pilih record lalu klik action).
+        # Mekanismenya
+        # Kalau kamu buka wizard lewat tombol action di tree/form view, Odoo akan kirim context ke wizard.
+        # Di dalam context, Odoo biasanya tambahkan:
+        # active_id → ID record yang sedang aktif (hanya satu record).
+        # active_ids → daftar ID kalau kamu pilih banyak record.
+        # active_model → nama model sumber (misalnya 'hospital.appointment').
         res['appointment_id'] = self.env.context.get('active_id')
         return res
 

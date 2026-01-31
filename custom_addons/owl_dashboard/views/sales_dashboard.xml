@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="action_owl_sales_odoo" model="ir.actions.client">
+            <field name="name">Owl Sales Dashboard</field>
+            <field name="tag">owl_dashboard.sales_dashboard</field>
+            <field name="target">main</field>
+            <!-- fullscrenn can make header hidden -->
+            <!-- <field name="target">fullscreen</field> --> 
+            <field name="path">dashboard-odoo</field>
+        </record>
+    </data>
+</odoo>

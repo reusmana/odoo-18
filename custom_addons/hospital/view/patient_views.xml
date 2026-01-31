@@ -18,6 +18,13 @@
         <field name="arch" type="xml">
             <form string="Patients">
 <!--                sheet for border and margin or padding-->
+                <header>
+                    <button name="testing_cronX" type="object"
+                            string="Api Model" class="oe_stat_button" />
+                    <button name="testing_cronX_without_api" type="object"
+                            string="Without Api Model" class="oe_stat_button" />
+                    
+                </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" type="object" name="action_view_appointment_count" icon="fa-star">
@@ -25,7 +32,8 @@
                         </button>
                     </div>
                     
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <widget name="web_ribbon" title="Approved" bg_color="text-bg-danger"/>
+                    <!-- <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/> -->
                     <field name="image" widget="image" class="oe_avatar"/>
                     <div class="oe_title">
 
@@ -130,6 +138,7 @@
 
     <record id="action_hospital_patients" model="ir.actions.act_window">
         <field name="name">Patients</field>
+        <field name="path">hospital</field>
         <field name="res_model">hospital.patients</field>
         <field name="view_mode">list,form</field>
 <!--        this is for clear the content before show the content-->

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_patients_wizard">
+        <t t-call="web.html_container">
+            <!-- <t t-foreach="data['docs']" t-as="doc"> -->
+                <!-- <t t-set="patients" t-value="data.get('docs', [])"/> -->
+                <div class="page">
+                    <h2>Patients Report</h2>
+                    <p><strong>From:</strong> <t t-esc="data.get('start_date', '')"/></p>
+                    <p><strong>To:</strong> <t t-esc="data.get('end_date', '')"/></p>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Patient ID</th>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Gender</th>
+                                <th>Date of Birth</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- <t t-foreach="data['docs']" t-as="patient">
+                                <tr>
+                                    <td><t t-esc="patient['id']"/></td>
+                                    <td><t t-esc="patient['name']"/></td>
+                                    <td><t t-esc="patient['age']"/></td>
+                                    <td><t t-esc="patient['gender']"/></td>
+                                    <td><t t-esc="patient['date_of_birth']"/></td>
+                                </tr>
+                            </t> -->
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+    </template>
+
+
+
+    <record id="action_report_hospital_patient_wizard" model="ir.actions.report">
+        <field name="name">Hospital Report Wizard</field>
+        <field name="model">hospital.patients</field>
+        <field name="report_type">qweb-pdf</field>
+
+        <!-- report name -->
+        <field name="report_name">hospital.report_patients_name</field>
+        <field name="report_file">hospital.report_patients_wizard</field>
+
+        <!-- this is if true then preview pdf not show  -->
+        <field name="multi">True</field> 
+
+        <!-- name of pdf -->
+        <field name="print_report_name">'Hospital Patient Report Wizard'</field>
+        <field name="binding_model_id" eval="False"/>  <!-- removes the action from the Print menu (forced False value for update) -->
+        <!-- <field name="binding_model_id" ref="hospital.model_hospital_patients"/> -->
+        <field name="binding_type">report</field>
+    </record>
+</odoo>
+
+
